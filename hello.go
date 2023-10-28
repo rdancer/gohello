@@ -6,7 +6,6 @@ import (
 	"io"
 	"os"
 	"sync"
-	"time"
 )
 
 const MessageFilePath = "./message.txt"
@@ -42,18 +41,7 @@ func main() {
 	}
 
 	// Wait for all printer goroutines to finish
-	for {
-		mu.Lock() // not really necessary; placate the race detector
-		if counter > 0 {
-			mu.Unlock()
-			cond.Broadcast()
-			time.Sleep(time.Second)
-		} else {
-			mu.Unlock()
-			break
-		}
-	}
-	wg.Wait() // no-op
+	wg.Wait()
 
 	close(readyCh) // Close readyCh channel after all goroutines are done
 }
